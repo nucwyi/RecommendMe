@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:background="@drawable/navigation_bg">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/user_login_head_image"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:src="@drawable/splash_bg"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"/>
+
+    <TextView
+        android:layout_marginLeft="20dp"
+        android:id="@+id/user_login_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/user_login_taste"
+        android:text="用户名："/>
+
+    <TextView
+        android:layout_marginLeft="20dp"
+        android:layout_marginBottom="45dp"
+        android:id="@+id/user_login_taste"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="口味系数："/>
+
+</RelativeLayout>

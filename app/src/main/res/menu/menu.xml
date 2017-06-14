@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/it_recommend"
+        android:title="推荐"
+        android:icon="@drawable/recommend"/>
+
+    <item android:id="@+id/it_food_list"
+        android:title="时令"
+        android:icon="@drawable/food"/>
+    <item android:id="@+id/it_school"
+        android:title="学校"
+        android:icon="@drawable/school"/>
+</menu>

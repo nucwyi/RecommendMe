@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@+id/first_group">
+    <item
+        android:id="@+id/it_my_taste"
+        android:title="我的口味图"
+        android:icon="@drawable/me"/>
+    <item
+        android:id="@+id/it_change_taste"
+        android:title="更改口味"
+        android:icon="@drawable/change"/>
+
+    <item
+        android:id="@+id/it_setting"
+        android:title="设置"
+        android:icon="@drawable/setting"/>
+
+    </group>
+
+    <group android:id="@+id/second_group">
+        <item
+            android:id="@+id/it_recall"
+            android:title="反馈"
+            android:icon="@drawable/chat_35px"/>
+    </group>
+</menu>
