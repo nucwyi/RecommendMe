@@ -38,8 +38,8 @@
             android:label="吃什么" />
         <activity android:name=".RegisterActivity" />
         <activity
-            android:name=".ShowSeasonalDetailsActivity"
-            android:theme="@style/ShowDetailsActivityTheme"></activity>
+            android:name=".ShowSeasonalDetailsActivity"/>
+
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -51,7 +51,7 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".Register2Activity"></activity>
+        <activity android:name=".Register2Activity"/>
     </application>
 
 </manifest>

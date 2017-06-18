@@ -39,7 +39,7 @@ public class Recommend extends Fragment{
     private Button recommend;
     private RecommendView recommendView;
 
-    private Float[] UserTaste = {1f,3f,1f,3f,2f};
+    private Float[] UserTaste = new Float[5];
     private List<String> FoodNames = new ArrayList<>();
     private List<Float> FoodAcid = new ArrayList<>();
     private List<Float> FoodSweet= new ArrayList<>();
@@ -60,7 +60,13 @@ public class Recommend extends Fragment{
         recommend = (Button) view.findViewById(R.id.bt_recommend_me);
 
         userTasteCacul = (Float) getArguments().get("taste");
-        Log.w(TAG, "MainActivity穿过了的taste："+userTasteCacul);
+        Log.w(TAG, "MainActivity传来的taste："+userTasteCacul);
+        UserTaste[0] = (Float) getArguments().get("acid");
+        UserTaste[1] = (Float) getArguments().get("sweet");
+        UserTaste[2] = (Float) getArguments().get("bitter");
+        UserTaste[3] = (Float) getArguments().get("spicy");
+        UserTaste[4] = (Float) getArguments().get("salty");
+
 
         recommend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,7 +74,7 @@ public class Recommend extends Fragment{
                 Log.w(TAG, "onclick");
 
                 if (isQuerying) {
-                    Toast.makeText(getContext(), "计算中。。。", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "计算完成。。。请再次点击", Toast.LENGTH_SHORT).show();
                     queryFood();
                 } else {
 
@@ -100,6 +106,9 @@ public class Recommend extends Fragment{
             public void done(List<Food> list, BmobException e) {
                 if (e == null){
                     Log.w(TAG, "querySuccess");
+                    FoodNames.clear();FoodAcid.clear();FoodSweet.clear();
+                    FoodBitter.clear();FoodSpicy.clear();FoodSalty.clear();
+                    BestFoods.clear();
 
                     for (Food food : list){
 
@@ -130,6 +139,7 @@ public class Recommend extends Fragment{
 
                         Float similar = fenzi/(userTasteCacul * fenmu2) * 100;
 
+                        //关联两个list
                         name_score_map.put(FoodNames.get(t), similar);
                         Log.w(TAG, "菜名、相似度："+FoodNames.get(t)+","+similar);
 
@@ -142,7 +152,6 @@ public class Recommend extends Fragment{
                         @Override
                         public int compare(Map.Entry<String, Float> o1, Map.Entry<String, Float> o2) {
                             return (int)(o2.getValue() - o1.getValue());
-                            //return (o1.getKey()).toString().compareTo(o2.getKey());
                         }
                     });
                     //排序后输出

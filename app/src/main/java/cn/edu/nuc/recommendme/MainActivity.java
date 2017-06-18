@@ -110,6 +110,12 @@ public class MainActivity extends AppCompatActivity{
     private URL iconUrl;
     private URL imageUrl;
 
+    private Float acid ;
+    private Float sweet ;
+    private Float bitter ;
+    private Float spicy ;
+    private Float salty ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,11 +146,11 @@ public class MainActivity extends AppCompatActivity{
         //获取从LoginActivity或register传过来的用户数据
         Intent intent = getIntent();
         name = intent.getStringExtra("name");
-        Float acid = intent.getFloatExtra("acid", 0);
-        final Float sweet = intent.getFloatExtra("sweet", 0);
-        Float bitter = intent.getFloatExtra("bitter", 0);
-        Float spicy = intent.getFloatExtra("spicy", 0);
-        Float salty = intent.getFloatExtra("salty", 0);
+         acid = intent.getFloatExtra("acid", 0);
+         sweet = intent.getFloatExtra("sweet", 0);
+         bitter = intent.getFloatExtra("bitter", 0);
+         spicy = intent.getFloatExtra("spicy", 0);
+         salty = intent.getFloatExtra("salty", 0);
 
         UserTaste =(float) Math.sqrt(acid*acid +
                 sweet*sweet + bitter*bitter +
@@ -246,17 +252,6 @@ public class MainActivity extends AppCompatActivity{
                 return false;
             }
         });
-        /*my_taste_image = (Button) findViewById(R.id.it_my_taste);
-        change_taste = (Button) findViewById(R.id.it_change_taste);
-        setting = (Button) findViewById(R.id.it_setting);
-        zhuxiao = (Button) findViewById(R.id.it_zhuxiao);
-        fankui = (Button) findViewById(R.id.it_recall);
-
-        my_taste_image.setOnClickListener(this);
-        change_taste.setOnClickListener(this);
-        setting.setOnClickListener(this);
-        zhuxiao.setOnClickListener(this);
-        fankui.setOnClickListener(this);*/
 
     }
 
@@ -356,6 +351,11 @@ public class MainActivity extends AppCompatActivity{
                     recommend = new Recommend();
                     Bundle bundle = new Bundle();
                     bundle.putFloat("taste", UserTaste);
+                    bundle.putFloat("acid", acid);
+                    bundle.putFloat("sweet", sweet);
+                    bundle.putFloat("bitter", bitter);
+                    bundle.putFloat("spicy", spicy);
+                    bundle.putFloat("salty", salty);
                     recommend.setArguments(bundle);
                     transaction.add(R.id.content, recommend);
                 }else {
@@ -377,6 +377,14 @@ public class MainActivity extends AppCompatActivity{
             case 2:
                 if (school == null){
                     school = new School();
+                    Bundle bundle = new Bundle();
+                    bundle.putFloat("taste", UserTaste);
+                    bundle.putFloat("acid", acid);
+                    bundle.putFloat("sweet", sweet);
+                    bundle.putFloat("bitter", bitter);
+                    bundle.putFloat("spicy", spicy);
+                    bundle.putFloat("salty", salty);
+                    school.setArguments(bundle);
                     transaction.add(R.id.content, school);
                 }else {
                     transaction.show(school);

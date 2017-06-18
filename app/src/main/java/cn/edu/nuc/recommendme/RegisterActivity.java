@@ -31,7 +31,6 @@ public class RegisterActivity extends Activity {
 
     private TextView tv_check_user_name;
 
-
     String myUserName ;
     String myPassword = null;
 
@@ -76,7 +75,7 @@ public class RegisterActivity extends Activity {
                                     is_user_password_ok = true;
                                     Intent intent = new Intent(RegisterActivity.this, Register2Activity.class);
                                     intent.putExtra("name", myUserName);
-                                    intent.putExtra("password", myPassword);
+                                    intent.putExtra("password", first_pass);
                                     startActivity(intent);
                                 }else {
                                     is_user_password_ok = false;
