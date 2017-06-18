@@ -1,6 +1,7 @@
 package cn.edu.nuc.recommendme.tables;
 
 import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.datatype.BmobFile;
 
 /**
  * Created by Administrator on 2017/6/13 0013.
@@ -15,6 +16,16 @@ public class User extends BmobObject {
     private Float bitter;
     private Float spicy;
     private Float salty;
+
+    private BmobFile Icon;
+
+    public BmobFile getIcon() {
+        return Icon;
+    }
+
+    public void setIcon(BmobFile icon) {
+        Icon = icon;
+    }
 
     public String getUserName() {
         return UserName;

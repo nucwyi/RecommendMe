@@ -1,6 +1,8 @@
 package cn.edu.nuc.recommendme;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -29,39 +31,23 @@ public class ShowSeasonalDetailsActivity extends AppCompatActivity {
         imageView = (ImageView) findViewById(R.id.seasonal_details_image);
         textView = (TextView) findViewById(R.id.seasonal_details_describe);
         setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null){
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
         Intent intent = getIntent();
-        String name = intent.getStringExtra("name");
+        String name = intent.getStringExtra("title");
         String des = intent.getStringExtra("describe");
-        int imageId = intent.getIntExtra("image", R.drawable.splash_bg);
+        //将byte数组转换成bitmap对象
+        byte [] bis=intent.getByteArrayExtra("bitmap");
+        Bitmap bitmap= BitmapFactory.decodeByteArray(bis, 0, bis.length);
+
 
         collapsingToolbarLayout.setTitle(name);
-        Glide.with(this).load(imageId).into(imageView);
-        String details = generateDetails(des);
-        textView.setText(details);
+        //Glide.with(this).load(bitmap).into(imageView);
+        imageView.setImageBitmap(bitmap);
+        textView.setText(des);
 
 
     }
 
-    private String generateDetails(String des){
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < 100; i++){
-            builder.append(des);
-        }
-        return builder.toString();
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:
-                finish();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+
 }

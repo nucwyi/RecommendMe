@@ -20,14 +20,16 @@
             android:id="@+id/tv_seasonal_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="22sp"
+            android:textSize="20sp"
+            android:maxLines="1"
             android:text="春分"/>
         <TextView
             android:id="@+id/tv_seasonal_describe"
             android:layout_marginLeft="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="18sp"
+            android:textSize="16sp"
+            android:maxLines="2"
             android:text="清明时节雨纷纷。。。。。"/>
     </LinearLayout>
 

@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:id="@+id/recommend"
+<RelativeLayout android:id="@+id/recommend"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#EEE5DE"
+    xmlns:wy="http://schemas.android.com/apk/res-auto">
 
-    <TextView
+
+    <Button
+        android:id="@+id/bt_recommend_me"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="推荐"/>
-</LinearLayout>
+        android:layout_centerInParent="true"
+        android:text="点击推荐"
+        android:textColor="#000"
+        android:background="#EE2C2C"/>
+
+</RelativeLayout>

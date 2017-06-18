@@ -28,22 +28,16 @@ public class RegisterActivity extends Activity {
     private EditText ed_user_name;
     private EditText ed_user_password;
     private EditText ed_check_password;
-    private EditText ed_acid;
-    private EditText ed_sweet;
-    private EditText ed_bitter;
-    private EditText ed_spicy;
-    private EditText ed_salty;
+
     private TextView tv_check_user_name;
-    private Button bt_register;
+
 
     String myUserName ;
     String myPassword = null;
-    Float myAcid = null;
-    Float mySweet = null;
-    Float myBitter = null;
-    Float mySpicy = null;
-    Float mySalty = null;
+
     private Boolean is_user_name_ok = false;
+    private Boolean is_user_password_ok = false;
+    private Button next ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +49,52 @@ public class RegisterActivity extends Activity {
         ed_user_name = (EditText) findViewById(R.id.edit_user_name);
         ed_user_password = (EditText) findViewById(R.id.edit_user_password);
         ed_check_password = (EditText) findViewById(R.id.edit_check_user_password);
-        ed_acid = (EditText) findViewById(R.id.ed_acid);
-        ed_sweet = (EditText) findViewById(R.id.ed_sweet);
-        ed_bitter = (EditText) findViewById(R.id.ed_bitter);
-        ed_spicy = (EditText) findViewById(R.id.ed_spicy);
-        ed_salty = (EditText) findViewById(R.id.ed_salty);
         tv_check_user_name = (TextView) findViewById(R.id.tv_check_user_name);
-        bt_register = (Button) findViewById(R.id.bt_user_register);
+        next = (Button) findViewById(R.id.bt_next);
+
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //检查用户名是否可用
+                myUserName = ed_user_name.getText().toString();
+                BmobQuery<User> query = new BmobQuery<User>();
+                query.addWhereEqualTo("UserName", myUserName);
+                query.findObjects(new FindListener<User>() {
+                    @Override
+                    public void done(List<User> list, BmobException e) {
+                        if (e == null){
+                            if (list.size() != 0){
+                                is_user_name_ok = false;
+                                Toast.makeText(RegisterActivity.this, "用户名已存在！", Toast.LENGTH_SHORT).show();
+                            }else {
+                                is_user_name_ok = true;
+
+                                //检查密码是否相同
+                                String first_pass = ed_user_password.getText().toString();
+                                String second_pass = ed_check_password.getText().toString();
+                                if (first_pass.equals(second_pass)){
+                                    is_user_password_ok = true;
+                                    Intent intent = new Intent(RegisterActivity.this, Register2Activity.class);
+                                    intent.putExtra("name", myUserName);
+                                    intent.putExtra("password", myPassword);
+                                    startActivity(intent);
+                                }else {
+                                    is_user_password_ok = false;
+                                    Toast.makeText(RegisterActivity.this, "两次输入密码不相同", Toast.LENGTH_SHORT).show();
+                                }
+
+                            }
+
+                        }else {
+                            Log.w("Register",e.getErrorCode()+"");
+                        }
+                    }
+                });
+
+
+            }
+        });
+
 
         //对输入的用户名进行判断，是否可用
         /*myUserName = ed_user_name.getText().toString();
@@ -77,51 +110,7 @@ public class RegisterActivity extends Activity {
 
 
 
-        //点击注册按钮，处理注册事件
-        bt_register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                myUserName = ed_user_name.getText().toString();
-                myPassword = ed_user_password.getText().toString();
-                myAcid = Float.valueOf(ed_acid.getText().toString());
-                mySweet = Float.valueOf(ed_sweet.getText().toString());
-                myBitter = Float.valueOf(ed_bitter.getText().toString());
-                mySpicy = Float.valueOf(ed_spicy.getText().toString());
-                mySalty = Float.valueOf(ed_salty.getText().toString());
 
-                User user = new User();
-                user.setUserName(myUserName);
-                user.setPassword(myPassword);
-                user.setAcid(myAcid);
-                user.setSweet(mySweet);
-                user.setBitter(myBitter);
-                user.setSpicy(mySpicy);
-                user.setSalty(mySalty);
-
-                user.save(new SaveListener<String>() {
-                    @Override
-                    public void done(String s, BmobException e) {
-                        if (e == null){
-                            Log.w("Bmob", "注册成功");
-                            Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
-
-                            Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                            intent.putExtra("name", myUserName);
-                            intent.putExtra("acid", myAcid);
-                            intent.putExtra("sweet", mySweet);
-                            intent.putExtra("bitter", myBitter);
-                            intent.putExtra("spicy", mySpicy);
-                            intent.putExtra("salty", mySalty);
-                            startActivity(intent);
-
-                            finish();
-                        }else {
-                            Log.w("Bmob", "注册失败");
-                        }
-                    }
-                });
-            }
-        });
     }
 
 

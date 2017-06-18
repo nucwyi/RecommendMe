@@ -55,7 +55,7 @@ public class MySeasonalListAdapter extends BaseAdapter {
 
         tv_title.setText(seasonalOne.getTitle());
         tv_des.setText(seasonalOne.getDescribe());
-        iv_image.setImageResource(seasonalOne.getImageId());
+        iv_image.setImageBitmap(seasonalOne.getBitmap());
 
         return view;
     }

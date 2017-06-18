@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
@@ -38,8 +39,19 @@
         <activity android:name=".RegisterActivity" />
         <activity
             android:name=".ShowSeasonalDetailsActivity"
-            android:theme="@style/ShowDetailsActivityTheme">
-        </activity>
+            android:theme="@style/ShowDetailsActivityTheme"></activity>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="cn.edu.nuc.recommendme.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+
+        <activity android:name=".Register2Activity"></activity>
     </application>
 
 </manifest>

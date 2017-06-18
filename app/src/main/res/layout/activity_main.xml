@@ -47,6 +47,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:background="#53868b"
         app:itemIconTint="@drawable/navigation_button_selector"
         app:itemTextColor="@drawable/navigation_button_selector"
         app:menu="@menu/menu"/>

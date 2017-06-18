@@ -2,7 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -64,88 +66,24 @@
     </LinearLayout>
 
     <TextView
+        android:layout_marginTop="35dp"
+        android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:text="对各口味的喜好程度\n（0为讨厌,5为最爱）"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"/>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_marginLeft="40dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/acid"/>
-        <EditText
-            android:id="@+id/ed_acid"
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
-            android:hint="酸"/>
-
-        <ImageView
-            android:layout_marginLeft="40dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/sweet"/>
-        <EditText
-            android:id="@+id/ed_sweet"
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
-            android:hint="甜"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:layout_marginLeft="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/bitter"/>
-        <EditText
-            android:id="@+id/ed_bitter"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:hint="苦"/>
-
-        <ImageView
-            android:layout_marginLeft="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/spicy"/>
-        <EditText
-            android:id="@+id/ed_spicy"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:hint="辣"/>
-        <ImageView
-            android:layout_marginLeft="20dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/salty"/>
-        <EditText
-            android:id="@+id/ed_salty"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:hint="咸"
-            android:layout_marginRight="10dp"/>
-    </LinearLayout>
+        android:text="最后一步"
+        android:textSize="20sp"
+        android:textColor="#2E8B57"/>
 
     <Button
-        android:layout_marginTop="20dp"
-        android:id="@+id/bt_user_register"
+        android:id="@+id/bt_next"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="30dp"
-        android:layout_marginLeft="30dp"
-        android:background="#FFF68F"
-        android:text="注册"
-        android:textSize="20sp"/>
+        android:text="选择我的口味喜好"
+        android:textSize="20sp"
+        android:layout_gravity="center"
+        android:background="#FA8072"/>
 
 </LinearLayout>

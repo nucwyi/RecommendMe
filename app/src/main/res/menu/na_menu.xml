@@ -19,6 +19,10 @@
 
     <group android:id="@+id/second_group">
         <item
+            android:id="@+id/it_zhuxiao"
+            android:title="注销"
+            android:icon="@drawable/user"/>
+        <item
             android:id="@+id/it_recall"
             android:title="反馈"
             android:icon="@drawable/chat_35px"/>
