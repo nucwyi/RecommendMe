@@ -6,13 +6,19 @@
     android:layout_height="match_parent">
 
 
+    <TextView
+        android:layout_above="@+id/bt_recommend_me"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:text="点击推荐"
+        android:textColor="#000"
+        android:layout_centerInParent="true"/>
     <Button
         android:id="@+id/bt_recommend_me"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="点击推荐"
-        android:textColor="#000"
-        android:background="#EE2C2C"/>
+        android:background="@mipmap/appicon_2png"/>
 
 </RelativeLayout>

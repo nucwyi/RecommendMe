@@ -20,9 +20,9 @@ import cn.edu.nuc.recommendme.Utils.SharedpreferencesUtils;
 public class GuildActivity extends Activity implements View.OnClickListener {
 
     //存放图片的数组
-    private int[] mImageIds = new int[]{R.drawable.guide_2,
+    private int[] mImageIds = new int[]{R.drawable.guild01,
             R.drawable.guide_2,
-            R.drawable.guide_2};
+            R.drawable.guild01};
 
     //定义一个集合，用于存放获取到的图片资源
     private List<ImageView> list;

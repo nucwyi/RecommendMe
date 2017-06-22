@@ -29,9 +29,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -73,7 +76,7 @@ import cn.edu.nuc.recommendme.tables.TableSeasonalFood;
 import cn.edu.nuc.recommendme.tables.User;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener{
 
     public static final int TAKE_PHOTO = 1;
     public static final int CROP_SMALL_PICTURE = 2;
@@ -107,6 +110,7 @@ public class MainActivity extends AppCompatActivity{
     private String name;
     private Float taste;
     private String iconStringUrl;
+
     private URL iconUrl;
     private URL imageUrl;
 
@@ -116,10 +120,27 @@ public class MainActivity extends AppCompatActivity{
     private Float spicy ;
     private Float salty ;
 
+    private final static long TWICE_CLICK_INTERVAL=1000;// 两次按返回键的最大间隔
+
+    private long firstClickTime=0; // 记录第一次按键的时间，如没有按键，则为0
+
+
+    @Override
+    public void onBackPressed() {
+        if ((System.currentTimeMillis() - firstClickTime) > TWICE_CLICK_INTERVAL){
+            firstClickTime = System.currentTimeMillis();
+            Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+        }else {
+            finish();
+            System.exit(0);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bmob.initialize(this, "b8028060cef024de7bf49fe6be101955");
+
         setContentView(R.layout.activity_main);
 
 
@@ -129,11 +150,39 @@ public class MainActivity extends AppCompatActivity{
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nv_view);
 
+
+
         //初始化header内的用户名和口味系数控件
         View header = navigationView.getHeaderView(0);
         login_user_name = (TextView) header.findViewById(R.id.user_login_name);
         login_user_taste = (TextView) header.findViewById(R.id.user_login_taste);
+
         login_user_head_image = (CircleImageView) header.findViewById(R.id.user_login_head_image);
+        //判断头像文件是否存在
+        File outputImage = new File(getExternalCacheDir(), "output_image.ipg");
+        if (outputImage.exists()){
+            Uri uri;
+            if (Build.VERSION.SDK_INT >= 24){
+                uri = FileProvider.getUriForFile(MainActivity.this,
+                        "cn.edu.nuc.recommendme.fileprovider", outputImage);
+            }else {
+                uri = Uri.fromFile(outputImage);
+            }
+
+            try{
+                Bitmap bitmap = BitmapFactory.decodeStream(
+                        getContentResolver().openInputStream(uri));
+                login_user_head_image.setImageBitmap(bitmap);
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+
+
+        }else {
+            login_user_head_image.setImageResource(R.drawable.splash_bg);
+        }
+
+
 
 
         //加载标题栏左边的人形图标（home图标）
@@ -219,6 +268,14 @@ public class MainActivity extends AppCompatActivity{
                         Toast.makeText(MainActivity.this, "开发中。。。", Toast.LENGTH_SHORT).show();
                         break;
                     case R.id.it_change_taste:
+                        Intent TasteChangeIntent = new Intent(MainActivity.this, TasteChangeActivity.class);
+                        TasteChangeIntent.putExtra("name", name);
+                        TasteChangeIntent.putExtra("acid", acid);
+                        TasteChangeIntent.putExtra("sweet", sweet);
+                        TasteChangeIntent.putExtra("bitter", bitter);
+                        TasteChangeIntent.putExtra("spicy", spicy);
+                        TasteChangeIntent.putExtra("salty", salty);
+                        startActivity(TasteChangeIntent);
 
                         break;
                     case R.id.it_setting:
@@ -257,10 +314,11 @@ public class MainActivity extends AppCompatActivity{
 
 
 
+
     //调用摄像头拍照
     private void takePhoto()
     {
-
+        //判断头像文件是否存在
         File outputImage = new File(getExternalCacheDir(), "output_image.ipg");
         try{
             if (outputImage.exists()){
@@ -316,12 +374,44 @@ public class MainActivity extends AppCompatActivity{
         final String imagePath = getExternalCacheDir()+ "/output_image.ipg";
         final BmobFile icon = new BmobFile(new File(imagePath));
 
+
         icon.uploadblock(new UploadFileListener() {
             @Override
             public void done(BmobException e) {
                 if (e == null){
                     Log.w(TAG, "上传成功。。。。。。。。。。。。。。。");
                     iconStringUrl = icon.getFileUrl();
+                    User user = new User();
+                    BmobQuery<User> query = new BmobQuery<User>();
+                    query.addWhereEqualTo("UserName", name);
+                    query.findObjects(new FindListener<User>() {
+                        @Override
+                        public void done(List<User> list, BmobException e) {
+                            if (e == null){
+                                for (User user1 : list){
+                                    objectId = user1.getObjectId();
+                                    Log.w(TAG, "获取id成功"+objectId);
+                                }
+                                User user2 = new User();
+                                user2.setIcon(icon);
+                                user2.update(objectId, new UpdateListener() {
+                                    @Override
+                                    public void done(BmobException e) {
+                                        if (e == null){
+                                            Toast.makeText(MainActivity.this, "信息更新成功", Toast.LENGTH_SHORT).show();
+                                        }else {
+                                            Log.w(TAG, "失败"+e.getErrorCode());
+                                        }
+                                    }
+                                });
+                            }else {
+                                Log.w(TAG, "获取id失败"+e.getErrorCode());
+                            }
+                        }
+                    });
+
+
+
                     try{
                         iconUrl = new URL(iconStringUrl);
                     } catch (IOException e1){
@@ -433,5 +523,14 @@ public class MainActivity extends AppCompatActivity{
     }
 
 
-
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        switch (view.getId()){
+            case R.id.bt_cancel_change:
+                Toast.makeText(this, "取消", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.bt_make_sure_change:
+                Toast.makeText(this, "修改", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

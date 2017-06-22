@@ -56,6 +56,15 @@ public class RegisterActivity extends Activity {
             public void onClick(View v) {
                 //检查用户名是否可用
                 myUserName = ed_user_name.getText().toString();
+                myPassword = ed_user_password.getText().toString();
+                if (myUserName.equals("")||myPassword.equals("")){
+                    Toast.makeText(RegisterActivity.this, "用户名或密码为空", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if(myPassword.length()<6){
+                    Toast.makeText(RegisterActivity.this, "密码至少6位数", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 BmobQuery<User> query = new BmobQuery<User>();
                 query.addWhereEqualTo("UserName", myUserName);
                 query.findObjects(new FindListener<User>() {
@@ -77,6 +86,7 @@ public class RegisterActivity extends Activity {
                                     intent.putExtra("name", myUserName);
                                     intent.putExtra("password", first_pass);
                                     startActivity(intent);
+                                    finish();
                                 }else {
                                     is_user_password_ok = false;
                                     Toast.makeText(RegisterActivity.this, "两次输入密码不相同", Toast.LENGTH_SHORT).show();

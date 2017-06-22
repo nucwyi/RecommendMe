@@ -28,10 +28,6 @@ public class RecommendView extends View{
 
     public RecommendView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-    }
-
-    public RecommendView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
         mArcRectF = new RectF();
 
         mPaint = new Paint();
@@ -39,11 +35,13 @@ public class RecommendView extends View{
         mPaint.setColor(Color.RED);
     }
 
+    public RecommendView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
-
 
         float x = (getWidth() - getHeight() / 2) / 2;
         float y = getHeight() / 4;

@@ -18,7 +18,8 @@
         android:layout_marginRight="60dp"
         android:layout_marginBottom="60dp"
         android:text="登录"
-        android:visibility="invisible"/>
+        android:visibility="invisible"
+        android:background="#FAFAD2"/>
 
     <Button
         android:id="@+id/bt_register"
@@ -28,7 +29,8 @@
         android:visibility="invisible"
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="60dp"
-        android:layout_marginBottom="60dp"/>
+        android:layout_marginBottom="60dp"
+        android:background="#FAFAD2"/>
 
 
 

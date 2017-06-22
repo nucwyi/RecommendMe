@@ -98,21 +98,18 @@ public class Register2Activity extends AppCompatActivity implements SeekBar.OnSe
         tv_salty = (TextView) findViewById(R.id.tv_salty);
 
         bar_acid = (SeekBar) findViewById(R.id.bar_acid);
-        bar_acid.setOnSeekBarChangeListener(this);
-
         bar_sweet = (SeekBar) findViewById(R.id.bar_sweet);
-        bar_sweet.setOnSeekBarChangeListener(this);
-
         bar_bitter = (SeekBar) findViewById(R.id.bar_bitter);
-        bar_bitter.setOnSeekBarChangeListener(this);
-
         bar_spicy = (SeekBar) findViewById(R.id.bar_spicy);
-        bar_spicy.setOnSeekBarChangeListener(this);
-
         bar_salty = (SeekBar) findViewById(R.id.bar_salty);
-        bar_salty.setOnSeekBarChangeListener(this);
 
         register = (Button) findViewById(R.id.bt_user_register);
+
+        bar_acid.setOnSeekBarChangeListener(this);
+        bar_sweet.setOnSeekBarChangeListener(this);
+        bar_bitter.setOnSeekBarChangeListener(this);
+        bar_spicy.setOnSeekBarChangeListener(this);
+        bar_salty.setOnSeekBarChangeListener(this);
     }
 
     @Override

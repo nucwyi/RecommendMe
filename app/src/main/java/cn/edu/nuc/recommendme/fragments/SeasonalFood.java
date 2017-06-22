@@ -8,17 +8,21 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.Scroller;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
@@ -57,6 +61,9 @@ public class SeasonalFood extends Fragment {
     private ListView mListView;
     private MySeasonalListAdapter adapter;
     private SwipeRefreshLayout mFreshVIew;
+    private CollapsingToolbarLayout mCollapsingToolbarLayout;
+    private Toolbar mToolbar;
+    private ImageView mFirstImage;
     //private ImageView testImageView;
     private int ListSize = 0;
     private int bitmapSize = 0;
@@ -71,19 +78,37 @@ public class SeasonalFood extends Fragment {
 
     private List<SeasonalOne> seasonalOnes = new ArrayList<>();
 
+
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_seasonal_food, container, false);
 
         mFreshVIew = (SwipeRefreshLayout) view.findViewById(R.id.seasonal_refresh_view);
         mListView = (ListView) view.findViewById(R.id.list_seasonal);
-
-        //testImageView = (ImageView) view.findViewById(R.id.test_imageVIew);
-
+        mToolbar = (Toolbar) view.findViewById(R.id.seasonalFood_toolBar);
+        mCollapsingToolbarLayout = (CollapsingToolbarLayout) view.findViewById(R.id.seasonalFood_collapsing_toolbar);
+        mFirstImage = (ImageView) view.findViewById(R.id.seasonalFood_image);
 
         //刷新控件设置
         mFreshVIew.setColorSchemeResources(R.color.colorPrimary);
+
+        mFirstImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), ShowSeasonalDetailsActivity.class);
+                intent.putExtra("title", "夏至");
+                intent.putExtra("describe", describes[1]);
+                intent.putExtra("id", R.drawable.seasonal_food_image);
+                startActivity(intent);
+            }
+        });
+
+        //第一次加载
+        refreshSeasonalFoodList();
+        mFirstImage.setImageResource(R.drawable.seasonal_food_image);
+        mCollapsingToolbarLayout.setTitle("吃什么");
         mFreshVIew.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -91,6 +116,7 @@ public class SeasonalFood extends Fragment {
                 bitmapSize = 0;
                 seasonalOnes.clear();
                 refreshSeasonalFoodList();
+                Toast.makeText(getContext(), "若图片未加载，请稍后刷新", Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -141,10 +167,10 @@ public class SeasonalFood extends Fragment {
                         Log.w(TAG, path);
                         if (image.exists()){
                             Log.w(TAG, "exists"+ ListSize);
-                            Bitmap exitsBitmap = convertToBitmap(path, 150, 150);
+                            Bitmap exitsBitmap = convertToBitmap(path, 250, 200);
 
                             bitmaps[ListSize-1] = exitsBitmap;
-                            continue;
+
                         }else {
                             try{
                                 image.createNewFile();
@@ -198,16 +224,10 @@ public class SeasonalFood extends Fragment {
                     fout.flush();
                     fout.close();
                     Log.w(TAG, "保存成功");
-                    //通知UI
-                    Message msg = mhandler.obtainMessage();
-                    Bundle b = new Bundle();
-                    b.putParcelable("bitmap", bitmap1);
-                    msg.what = 1;
-                    msg.setData(b);
-                    mhandler.sendMessage(msg);
-
+                    //将其存放在数组内
                     bitmaps[bitmapSize] = bitmap1;
                     bitmapSize ++;
+                    
                 }catch (IOException e){
                     e.printStackTrace();
                 }
@@ -218,17 +238,6 @@ public class SeasonalFood extends Fragment {
 
     }
 
-    private Handler mhandler = new Handler(){
-        public void handleMessage(Message message){
-            switch (message.what){
-                case 1:
-                    Bundle bitmapBundle = message.getData();
-                    Bitmap bitmap = bitmapBundle.getParcelable("bitmap");
-                    Log.w(TAG, "下载图片成功");
-
-            }
-        }
-    };
 
     public Bitmap convertToBitmap(String path, int w, int h) {
         BitmapFactory.Options opts = new BitmapFactory.Options();

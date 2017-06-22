@@ -55,6 +55,15 @@ public class School extends Fragment implements View.OnClickListener{
     private List<Float> FoodSalty= new ArrayList<>();
     private List<String> BestFoods = new ArrayList<>();
     private List<String> FoodDes = new ArrayList<>();
+
+    private boolean unLikeAcid = false;
+    private boolean unLikeSweet = false;
+    private boolean unLikeBitter = false;
+    private boolean unLikeSpicy = false;
+    private boolean unLikeSalty = false;
+
+    private int listSize = 0;
+
     private boolean isWest = true;
     private Map<String, String> name_des_map = new HashMap<>();
     private Map<String, Float> name_score_map = new HashMap<>();
@@ -100,6 +109,23 @@ public class School extends Fragment implements View.OnClickListener{
         UserTaste[3] = (Float) getArguments().get("spicy");
         UserTaste[4] = (Float) getArguments().get("salty");
 
+        //对各个值进行判断
+        if (UserTaste[0] <= 2){
+            unLikeAcid = true;
+        }
+        if (UserTaste[1] <= 2){
+            unLikeSweet = true;
+        }
+        if (UserTaste[2] <= 2){
+            unLikeBitter = true;
+        }
+        if (UserTaste[3] <= 2){
+            unLikeSpicy = true;
+        }
+        if (UserTaste[4] <= 2){
+            unLikeSalty = true;
+        }
+
         mViewPager = (ViewPager) view.findViewById(R.id.school_viewPager);
         mDotLayout = (LinearLayout) view.findViewById(R.id.school_dot_layout);
         mTextView = (TextView) view.findViewById(R.id.school_tv_des);
@@ -129,10 +155,10 @@ public class School extends Fragment implements View.OnClickListener{
         });
 
         //准备数据
-        list.add(new ViewpagerUtil(R.drawable.guide_2, "文瀛一食堂"));
-        list.add(new ViewpagerUtil(R.drawable.navigation_bg, "文瀛四食堂"));
-        list.add(new ViewpagerUtil(R.drawable.guide_2, "文韬食堂"));
-        list.add(new ViewpagerUtil(R.drawable.navigation_bg, "北区新食堂"));
+        list.add(new ViewpagerUtil(R.drawable.wenyingyi, "文瀛一食堂"));
+        list.add(new ViewpagerUtil(R.drawable.xinshitang, "文瀛四食堂"));
+        list.add(new ViewpagerUtil(R.drawable.wenyingyi, "文韬食堂"));
+        list.add(new ViewpagerUtil(R.drawable.xinshitang, "北区新食堂"));
 
         //初始化所有点
         initDotLayout();
@@ -204,22 +230,32 @@ public class School extends Fragment implements View.OnClickListener{
                 if (isWest){
                     //根据口味相似度推荐，查west表
                     if (isQuerying) {
-                        Toast.makeText(getContext(), "计算完成。。。请再次点击", Toast.LENGTH_SHORT).show();
                         query_west_similar();
+                        Toast.makeText(getContext(), "计算完成。。。请再次点击", Toast.LENGTH_SHORT).show();
                     } else {
 
                         final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                         builder.setTitle("掐指一算，推荐您：");
                         builder.setMessage(BestFoods.get(0));
                         builder.setCancelable(false);
-                        builder.setNegativeButton("不错，朕喜欢", null);
-                        builder.setPositiveButton("不行，下一个", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                builder.setMessage(BestFoods.get(1));
-                                builder.setPositiveButton("没了。。",null);
-                            }
-                        });
+
+                        if (BestFoods.size() > 1){
+                            builder.setNegativeButton("哎哟，不错哦", null);
+                            builder.setPositiveButton("下一个", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    final AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
+                                    builder2.setTitle("掐指又一算，推荐您：");
+                                    builder2.setMessage(BestFoods.get(1));
+                                    builder2.setNegativeButton("都不喜欢",null);
+                                    builder2.setPositiveButton("甚合我意",null);
+                                    builder2.show();
+                                }
+                            });
+                        } else {
+                            builder.setNegativeButton("唉，不喜欢", null);
+                            builder.setPositiveButton("甚合我意",null);
+                        }
                         builder.show();
                     }
                 }else {
@@ -257,6 +293,18 @@ public class School extends Fragment implements View.OnClickListener{
 
                     for (West food : list){
 
+                        if (unLikeAcid && food.getAcid() > 2.6){
+                            continue;
+                        }else if (unLikeSweet && food.getSweet() > 3){
+                            continue;
+                        }else if (unLikeBitter && food.getBitter() >2){
+                            continue;
+                        }else if (unLikeSpicy && food.getSpicy() > 2){
+                            continue;
+                        }else if (unLikeSalty && food.getSalty() > 3){
+                            continue;
+                        }
+
                         FoodNames.add(food.getFoodName());
                         FoodAcid.add(food.getAcid());
                         FoodSweet.add(food.getSweet());
@@ -264,11 +312,12 @@ public class School extends Fragment implements View.OnClickListener{
                         FoodSpicy.add(food.getSpicy());
                         FoodSalty.add(food.getSalty());
                         FoodDes.add(food.getDes());
+                        listSize++;
                     }
                     //计算相似度
                     Log.w(TAG,"开始相似度计算");
-                    Log.w(TAG, "列表大小："+list.size());
-                    for (int t = 0; t < list.size(); t++){
+                    Log.w(TAG, "列表大小："+listSize);
+                    for (int t = 0; t < listSize; t++){
 
                         Float fenzi = (UserTaste[0]*FoodAcid.get(t) +
                                 UserTaste[1]*FoodSweet.get(t) +

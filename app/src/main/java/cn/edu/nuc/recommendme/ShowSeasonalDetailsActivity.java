@@ -35,15 +35,24 @@ public class ShowSeasonalDetailsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String name = intent.getStringExtra("title");
         String des = intent.getStringExtra("describe");
-        //将byte数组转换成bitmap对象
-        byte [] bis=intent.getByteArrayExtra("bitmap");
-        Bitmap bitmap= BitmapFactory.decodeByteArray(bis, 0, bis.length);
-
+        int id = intent.getIntExtra("id", 0);
 
         collapsingToolbarLayout.setTitle(name);
-        //Glide.with(this).load(bitmap).into(imageView);
-        imageView.setImageBitmap(bitmap);
         textView.setText(des);
+        if (id == 0){
+            //将byte数组转换成bitmap对象
+            byte [] bis=intent.getByteArrayExtra("bitmap");
+            Bitmap bitmap= BitmapFactory.decodeByteArray(bis, 0, bis.length);
+            imageView.setImageBitmap(bitmap);
+        }else {
+            imageView.setImageResource(id);
+        }
+
+
+
+
+
+
 
 
     }

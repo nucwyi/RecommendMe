@@ -47,7 +47,7 @@
             android:id="@+id/edit_user_password"
             android:layout_width="275dp"
             android:layout_height="wrap_content"
-            android:hint="请输入密码"
+            android:hint="请输入密码(不少于6位数)"
             android:layout_marginLeft="40dp"
             android:layout_marginTop="15dp"
             android:drawableLeft="@drawable/password_24px"

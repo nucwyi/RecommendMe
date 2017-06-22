@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,8 @@ public class Recommend extends Fragment{
     private Button recommend;
     private RecommendView recommendView;
 
+
+    private float userTasteCacul ;
     private Float[] UserTaste = new Float[5];
     private List<String> FoodNames = new ArrayList<>();
     private List<Float> FoodAcid = new ArrayList<>();
@@ -47,9 +50,15 @@ public class Recommend extends Fragment{
     private List<Float> FoodSpicy= new ArrayList<>();
     private List<Float> FoodSalty= new ArrayList<>();
     private List<String> BestFoods = new ArrayList<>();
-    private float userTasteCacul ;
-
     private Map<String, Float> name_score_map = new HashMap<>();
+
+    private boolean unLikeAcid = false;
+    private boolean unLikeSweet = false;
+    private boolean unLikeBitter = false;
+    private boolean unLikeSpicy = false;
+    private boolean unLikeSalty = false;
+
+    private int listSize = 0;
 
     private boolean isQuerying = true;
 
@@ -67,6 +76,22 @@ public class Recommend extends Fragment{
         UserTaste[3] = (Float) getArguments().get("spicy");
         UserTaste[4] = (Float) getArguments().get("salty");
 
+        //对各个值进行判断
+        if (UserTaste[0] <= 2){
+            unLikeAcid = true;
+        }
+        if (UserTaste[1] <= 2){
+            unLikeSweet = true;
+        }
+        if (UserTaste[2] <= 2){
+            unLikeBitter = true;
+        }
+        if (UserTaste[3] <= 2){
+            unLikeSpicy = true;
+        }
+        if (UserTaste[4] <= 2){
+            unLikeSalty = true;
+        }
 
         recommend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,15 +105,35 @@ public class Recommend extends Fragment{
 
                     final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     builder.setTitle("掐指一算，推荐您：");
-                    builder.setMessage(BestFoods.get(0)+"\n"+BestFoods.get(1));
-                    builder.setCancelable(false);
-                    builder.setNegativeButton("哎，都不喜欢", null);
-                    builder.setPositiveButton("嗯，不错，朕知道了", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                    if (BestFoods.get(1) != null){
+                        builder.setMessage(BestFoods.get(0)+"\n"+BestFoods.get(1));
+                    }else {
+                        builder.setMessage(BestFoods.get(0));
+                    }
 
-                        }
-                    });
+                    builder.setCancelable(false);
+
+                    if (BestFoods.size() > 2){
+                        builder.setNegativeButton("哎哟，不错哦", null);
+                        builder.setPositiveButton("换一批", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                final AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
+                                builder2.setTitle("掐指又一算，推荐您：");
+                                if (BestFoods.get(3) != null){
+                                    builder2.setMessage(BestFoods.get(2)+"\n"+BestFoods.get(3));
+                                }else {
+                                    builder2.setMessage(BestFoods.get(2));
+                                }
+                                builder2.setNegativeButton("都不喜欢",null);
+                                builder2.setPositiveButton("甚合我意",null);
+                                builder2.show();
+                            }
+                        });
+                    } else {
+                        builder.setNegativeButton("唉，都不喜欢", null);
+                        builder.setPositiveButton("甚合我意",null);
+                    }
                     builder.show();
                 }
             }
@@ -112,17 +157,30 @@ public class Recommend extends Fragment{
 
                     for (Food food : list){
 
+                        if (unLikeAcid && food.getAcid() > 2.6){
+                            continue;
+                        }else if (unLikeSweet && food.getSweet() > 3){
+                            continue;
+                        }else if (unLikeBitter && food.getBitter() >2){
+                            continue;
+                        }else if (unLikeSpicy && food.getSpicy() > 2){
+                            continue;
+                        }else if (unLikeSalty && food.getSalty() > 3){
+                            continue;
+                        }
                         FoodNames.add(food.getFoodName());
                         FoodAcid.add(food.getAcid());
                         FoodSweet.add(food.getSweet());
                         FoodBitter.add(food.getBitter());
                         FoodSpicy.add(food.getSpicy());
                         FoodSalty.add(food.getSalty());
+                        listSize++;
+
                     }
                     //计算相似度
                     Log.w(TAG,"开始相似度计算");
-                    Log.w(TAG, "列表大小："+list.size());
-                    for (int t = 0; t < list.size(); t++){
+                    Log.w(TAG, "列表大小："+listSize);
+                    for (int t = 0; t < listSize; t++){
 
                         FoodNames.get(t);
                         Float fenzi = (UserTaste[0]*FoodAcid.get(t) +

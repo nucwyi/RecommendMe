@@ -2,24 +2,33 @@ package cn.edu.nuc.recommendme;
 
 
 import android.app.Dialog;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FindListener;
+import cn.edu.nuc.recommendme.Utils.Contants;
+import cn.edu.nuc.recommendme.Utils.MyDatabaseHelper;
+import cn.edu.nuc.recommendme.Utils.SharedpreferencesUtils;
 import cn.edu.nuc.recommendme.tables.User;
 
 /**
@@ -33,11 +42,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextView register;
     private Button login;
 
+    private boolean isLogined = false;
+    private String getBaseName;
+    private String getBasePassword;
+
+    private List<String> nameList = new ArrayList<>();
+
+    private MyDatabaseHelper dbHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bmob.initialize(this, "b8028060cef024de7bf49fe6be101955");
         setContentView(R.layout.activity_login);
+
+        dbHelper = new MyDatabaseHelper(this, "UserInfo.db", null, 1);
 
         userName = (EditText) findViewById(R.id.ed_LoginActivity_user_name);
         password = (EditText) findViewById(R.id.ed_LoginActivity_password);
@@ -49,6 +68,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         froget_password.setOnClickListener(this);
         register.setOnClickListener(this);
         login.setOnClickListener(this);
+
+        boolean isFirstLogin = SharedpreferencesUtils.getBoolean(this, "isFirstLogin", false);
+        if (isFirstLogin){
+            SQLiteDatabase db = dbHelper.getWritableDatabase();
+            Cursor cursor = db.query("UserInfo", null, null, null, null, null, null);
+            if (cursor.moveToFirst()){
+                do {
+                    getBaseName = cursor.getString(cursor.getColumnIndex("userName"));
+                    getBasePassword = cursor.getString(cursor.getColumnIndex("password"));
+                    nameList.add(getBaseName);
+                    Log.w("Login", "表内姓名："+getBaseName);
+                } while (cursor.moveToNext());
+            }
+            cursor.close();
+            userName.setText(getBaseName);
+            password.setText(getBasePassword);
+        }
 
     }
 
@@ -68,7 +104,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             case R.id.bt_LoginActivity_login:
                 final String inputName = userName.getText().toString();
                 final String inputPassword = password.getText().toString();
-                if (inputName.equals("") || inputPassword.equals(" ")){
+                if (inputName.equals("") || inputPassword.equals("")){
                     Toast.makeText(this, "用户名或密码不能为空！", Toast.LENGTH_SHORT).show();
                     break;
                 }else {
@@ -82,6 +118,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     if (inputName.equals(user.getUserName())){
                                         if (inputPassword.equals(user.getPassword())){
                                             getUserInfo(user);
+                                            //保存用户名和密码到本地数据库
                                             finish();
                                             return;
                                         }else {
@@ -115,7 +152,28 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         intent.putExtra("spicy", getSpicy);
         intent.putExtra("salty", getSalty);
 
+        for (int i = 0; i < nameList.size(); i ++){
+            if (getName.equals(nameList.get(i))){
+                startActivity(intent);
+                SharedpreferencesUtils.saveBoolean(this, "isFirstLogin", true);
+                return;
+            }
+        }
+        Log.w("Login", "准备添加数据");
+        dbHelper.getWritableDatabase();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        //填入数据
+        values.put("userName", getName);
+        values.put("password", user.getPassword());
+        db.insert("UserInfo", null, values);
+
+        Log.w("Login", "添加数据成功");
+
         startActivity(intent);
+        SharedpreferencesUtils.saveBoolean(this, "isFirstLogin", true);
     }
+
+
 }
 

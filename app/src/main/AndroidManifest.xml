@@ -17,7 +17,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/appicon_2png"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -38,8 +38,8 @@
             android:label="吃什么" />
         <activity android:name=".RegisterActivity" />
         <activity
-            android:name=".ShowSeasonalDetailsActivity"/>
-
+            android:name=".ShowSeasonalDetailsActivity"
+            android:theme="@style/ShowDetailsActivityTheme" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -51,7 +51,8 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".Register2Activity"/>
+        <activity android:name=".Register2Activity" />
+        <activity android:name=".TasteChangeActivity"></activity>
     </application>
 
 </manifest>
